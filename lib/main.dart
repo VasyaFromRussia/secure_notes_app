@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:secure_notes/feature/auth/auth_bloc.dart';
 import 'package:secure_notes/feature/auth/auth_module.dart';
-import 'package:secure_notes/feature/auth/auth_ui.dart';
 import 'package:secure_notes/feature/notes/note_module.dart';
+import 'package:secure_notes/feature/notes/notes_bloc.dart';
+import 'package:secure_notes/feature/notes/notes_model.dart';
+import 'package:secure_notes/navigator.dart';
 import 'package:secure_notes/utils/di.dart';
 
 final modules = [
@@ -88,50 +90,31 @@ class AuthStateResolver extends StatelessWidget {
       );
 }
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+class NotesBlocProvider extends StatelessWidget {
+  const NotesBlocProvider({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  final Widget child;
 
   @override
-  Widget build(BuildContext context) => Container(
-        child: Text('Splashhhhh'),
-      );
-}
-
-class AppNavigator extends StatelessWidget {
-  static const _routeSplash = '/';
-  static const _routeSignIn = '/sign_in';
-  static const _routeSignUp = '/sign_up';
-  static const _routeNotes = '/notes';
-  static const _routeEditor = '/editor';
-
-  static void navigateToSignIn(BuildContext context) => Navigator.of(context).pushReplacementNamed(_routeSignIn);
-
-  static void navigateToSignUp(BuildContext context) => Navigator.of(context).pushReplacementNamed(_routeSignUp);
-
-  static void navigateNotes(BuildContext context) => Navigator.of(context).pushReplacementNamed(_routeNotes);
-
-  static void navigateEditor(BuildContext context, String noteId) => Navigator.of(context).pushNamed(_routeEditor, arguments: noteId);
-
-  const AppNavigator({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => Navigator(
-        initialRoute: _routeSplash,
-        onGenerateRoute: (settings) {
-          switch (settings.name) {
-            case _routeSplash:
-              return MaterialPageRoute(builder: (context) => AuthStateResolver(child: SplashScreen()));
-            case _routeSignIn:
-              return MaterialPageRoute(builder: (context) => AuthStateResolver(child: SignInScreen()));
-            case _routeSignUp:
-              return MaterialPageRoute(builder: (context) => AuthStateResolver(child: SignUpScreen()));
-            case _routeNotes:
-              return MaterialPageRoute(builder: (context) => Container(color: Colors.deepOrange));
-            case _routeEditor:
-              return MaterialPageRoute(builder: (context) => Container(color: Colors.deepPurple));
-            default:
-              throw 'Unknown route: ${settings.name}';
+  Widget build(BuildContext context) => FutureBuilder(
+        future: injectAsync<NotesRepository>(),
+        builder: (context, snapshot) {
+          if (snapshot.data != null) {
+            return BlocProvider(
+              create: (context) => NotesCubit(notesRepository: snapshot.data as NotesRepository)..init(),
+              lazy: true,
+              child: child,
+            );
+          } else {
+            return _buildLoadingState(context);
           }
         },
+      );
+
+  Widget _buildLoadingState(BuildContext context) => Center(
+        child: CircularProgressIndicator(),
       );
 }
