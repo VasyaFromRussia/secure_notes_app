@@ -33,6 +33,14 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+  fonts:
+    - family: Raleway
+      fonts:
+        - asset: assets/fonts/raleway_regular.ttf
+    - family: Yanone Kaffeesatz
+      fonts:
+        - asset: assets/fonts/yanone_kaffeesatz_medium.ttf
+          weight: 400
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -11,33 +11,43 @@ abstract class AppColors {
   static final errorBackground = Color(0xFFD91616);
 }
 
-final textTheme = TextTheme(
-  headline4: TextStyle(
-    fontSize: 34,
-    fontWeight: FontWeight.normal,
-    color: AppColors.text,
-  ),
-  headline5: TextStyle(
-    fontSize: 24,
-    fontWeight: FontWeight.w500,
-    color: AppColors.text,
-  ),
-  headline6: TextStyle(
-    fontSize: 20,
-    fontWeight: FontWeight.w500,
-    color: AppColors.text,
-  ),
-  bodyText1: TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.normal,
-    color: AppColors.text,
-  ),
-  bodyText2: TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.normal,
-    color: AppColors.text,
-  ),
-);
+abstract class Typography {
+  static const _fontFamilyRaleway = 'Raleway';
+  static const _fontFamilyYanoneKaffeesatz = 'Yanone Kaffeesatz';
+
+  static final textTheme = TextTheme(
+    headline4: TextStyle(
+      fontSize: 34,
+      fontWeight: FontWeight.normal,
+      color: AppColors.text,
+      fontFamily: _fontFamilyYanoneKaffeesatz,
+    ),
+    headline5: TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.w500,
+      color: AppColors.text,
+      fontFamily: _fontFamilyYanoneKaffeesatz,
+    ),
+    headline6: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
+      color: AppColors.text,
+      fontFamily: _fontFamilyYanoneKaffeesatz,
+    ),
+    bodyText1: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.normal,
+      color: AppColors.text,
+      fontFamily: _fontFamilyRaleway,
+    ),
+    bodyText2: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+      color: AppColors.text,
+      fontFamily: _fontFamilyRaleway,
+    ),
+  );
+}
 
 final appTheme = ThemeData(
   brightness: Brightness.dark,
@@ -48,7 +58,7 @@ final appTheme = ThemeData(
   disabledColor: AppColors.inactiveColor,
   snackBarTheme: SnackBarThemeData(
     backgroundColor: AppColors.errorBackground,
-    contentTextStyle: textTheme.bodyText2?.copyWith(color: AppColors.textLight),
+    contentTextStyle: Typography.textTheme.bodyText2?.copyWith(color: AppColors.textLight),
   ),
   inputDecorationTheme: InputDecorationTheme(
     disabledBorder: InputBorder.none,
@@ -56,5 +66,5 @@ final appTheme = ThemeData(
     enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.inactiveColor)),
     focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.accentColor, width: 2)),
   ),
-  textTheme: textTheme,
+  textTheme: Typography.textTheme,
 );
