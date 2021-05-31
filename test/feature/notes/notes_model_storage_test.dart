@@ -29,7 +29,7 @@ void main() {
           await storage.write(testFileName, 'hello');
 
           final expectedFile = await testDirectory.getFile(testFileName);
-          expect(expectedFile.existsSync(), true);
+          await expectLater(expectedFile.exists(), completion(equals(true)));
         },
       );
 
@@ -78,7 +78,7 @@ void main() {
           await storage.write(testFileName, 'hello');
 
           final expectedFile = await testDirectory.getFile(testFileName + testFileExtension);
-          expect(expectedFile.existsSync(), true);
+          await expectLater(expectedFile.exists(), completion(equals(true)));
         },
       );
 
@@ -139,7 +139,7 @@ void main() {
           await storage.write(testFileName, 'hello');
 
           final expectedFile = await testDirectory.getFile(testFileName);
-          expect(expectedFile.existsSync(), true);
+          await expectLater(expectedFile.exists(), completion(equals(true)));
         },
       );
 
