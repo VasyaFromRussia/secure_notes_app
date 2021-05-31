@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:secure_notes/utils/resources.dart';
 
 class CardContainer extends StatelessWidget {
   const CardContainer({
@@ -10,7 +11,7 @@ class CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Material(
-        color: Theme.of(context).backgroundColor,
+        color: context.theme.backgroundColor,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         child: Padding(
           padding: EdgeInsets.all(20),
@@ -24,7 +25,6 @@ class LoaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-    child: CircularProgressIndicator(),
-  );
+        child: CircularProgressIndicator(),
+      );
 }
-

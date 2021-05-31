@@ -24,7 +24,7 @@ class NotesListScreen extends StatelessWidget {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.edit, color: Theme.of(context).backgroundColor),
+          child: Icon(Icons.edit, color: context.theme.backgroundColor),
           onPressed: () => _navigateToEditor(context, null),
         ),
       );
@@ -75,7 +75,7 @@ class NotesListScreen extends StatelessWidget {
         tag: meta.id,
         child: Material(
           borderRadius: BorderRadius.all(Radius.circular(8)),
-          color: Theme.of(context).backgroundColor,
+          color: context.theme.backgroundColor,
           child: InkWell(
             onTap: () => _navigateToEditor(context, meta.id),
             child: Padding(

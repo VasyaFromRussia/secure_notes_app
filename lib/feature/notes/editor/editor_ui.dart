@@ -7,6 +7,7 @@ import 'package:secure_notes/feature/notes/editor/editor_bloc_ui.dart';
 import 'package:secure_notes/feature/notes/notes_model.dart';
 import 'package:secure_notes/feature/resources/strings.dart';
 import 'package:secure_notes/feature/resources/theme.dart';
+import 'package:secure_notes/utils/resources.dart';
 
 part 'editor_ui.freezed.dart';
 
@@ -104,8 +105,8 @@ class _EditorScreenState extends State<EditorScreen> {
         controller: _titleController,
         enabled: enabled,
         hint: AppStrings.editorTitleHint,
-        textStyle: Theme.of(context).textTheme.headline5,
-        hintStyle: Theme.of(context).textTheme.headline5?.copyWith(color: AppColors.inactiveColor),
+        textStyle: context.textTheme.headline5,
+        hintStyle: context.textTheme.headline5?.copyWith(color: AppColors.inactiveColor),
         isMultiline: false,
       );
 
@@ -113,8 +114,8 @@ class _EditorScreenState extends State<EditorScreen> {
         controller: _contentController,
         enabled: enabled,
         hint: AppStrings.editorContentHint,
-        textStyle: Theme.of(context).textTheme.bodyText1,
-        hintStyle: Theme.of(context).textTheme.bodyText1?.copyWith(color: AppColors.inactiveColor),
+        textStyle: context.textTheme.bodyText1,
+        hintStyle: context.textTheme.bodyText1?.copyWith(color: AppColors.inactiveColor),
         isMultiline: true,
       );
 
@@ -159,6 +160,6 @@ class TextInputWidget extends StatelessWidget {
         decoration: InputDecoration(
           hintStyle: hintStyle,
           hintText: hint,
-        ).applyDefaults(Theme.of(context).inputDecorationTheme),
+        ).applyDefaults(context.theme.inputDecorationTheme),
       );
 }

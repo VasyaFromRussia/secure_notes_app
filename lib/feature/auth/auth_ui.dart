@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:secure_notes/feature/auth/auth_bloc.dart';
 import 'package:secure_notes/feature/common/common_ui.dart';
 import 'package:secure_notes/feature/resources/drawables.dart';
