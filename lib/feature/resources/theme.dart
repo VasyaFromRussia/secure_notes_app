@@ -8,6 +8,7 @@ abstract class AppColors {
   static final inactiveColor = Color(0xFFCECECE);
   static final text = Color(0xFF1C1C1C);
   static final textLight = Color(0xFFEFEFEF);
+  static final errorBackground = Color(0xFFD91616);
 }
 
 final textTheme = TextTheme(
@@ -44,6 +45,11 @@ final appTheme = ThemeData(
   accentColor: AppColors.accentColor,
   scaffoldBackgroundColor: AppColors.surfaceColor,
   backgroundColor: AppColors.backgroundColor,
+  disabledColor: AppColors.inactiveColor,
+  snackBarTheme: SnackBarThemeData(
+    backgroundColor: AppColors.errorBackground,
+    contentTextStyle: textTheme.bodyText2?.copyWith(color: AppColors.textLight),
+  ),
   inputDecorationTheme: InputDecorationTheme(
     disabledBorder: InputBorder.none,
     border: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.inactiveColor)),

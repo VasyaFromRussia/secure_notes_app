@@ -11,7 +11,7 @@ import '../notes_bloc_test.mocks.dart';
 @GenerateMocks([NotesRepository])
 void main() {
   final notesRepository = MockNotesRepository();
-  
+
   final note = NoteModel(
     meta: NoteMetaModel(
       id: '1',
@@ -20,14 +20,19 @@ void main() {
     ),
     content: 'content',
   );
-  
+
   setUp(() {
     reset(notesRepository);
   });
 
   blocTest<EditorCubit, EditorState>(
     'Given bloc initializing, when id is not passed, then final state is Editing',
-    build: () => EditorCubit(notesRepository: notesRepository, noteIdGenerator: () => '1', currentDateTimeProvider: () => DateTime.utc(2021)),
+    build: () => EditorCubit(
+      notesRepository: notesRepository,
+      noteIdGenerator: () => '1',
+      currentDateTimeProvider: () => DateTime.utc(2021),
+      defaultTitle: 'default',
+    ),
     act: (cubit) => cubit.init(id: null),
     expect: () => [
       EditorState.loading(),
@@ -39,7 +44,11 @@ void main() {
     'Given bloc initializing, when id is passed, then final state is Reading',
     build: () {
       when(notesRepository.getNote(any)).thenAnswer((invocation) => Future.value(note));
-      return EditorCubit(notesRepository: notesRepository, noteIdGenerator: () => '1');
+      return EditorCubit(
+        notesRepository: notesRepository,
+        noteIdGenerator: () => '1',
+        defaultTitle: 'default',
+      );
     },
     act: (cubit) => cubit.init(id: note.id),
     expect: () => [
@@ -50,7 +59,10 @@ void main() {
 
   blocTest<EditorCubit, EditorState>(
     'Given bloc in loading state, when trying to switch to editing mode, then it fails',
-    build: () => EditorCubit(notesRepository: notesRepository),
+    build: () => EditorCubit(
+      notesRepository: notesRepository,
+      defaultTitle: 'default',
+    ),
     seed: () => EditorState.loading(),
     act: (cubit) => cubit.edit(),
     errors: () => [
@@ -60,7 +72,10 @@ void main() {
 
   blocTest<EditorCubit, EditorState>(
     'Given bloc in reading state, when trying to switch to editing mode, then it succeeds',
-    build: () => EditorCubit(notesRepository: notesRepository),
+    build: () => EditorCubit(
+      notesRepository: notesRepository,
+      defaultTitle: 'default',
+    ),
     seed: () => EditorState.reading(note),
     act: (cubit) => cubit.edit(),
     expect: () => [
@@ -70,7 +85,10 @@ void main() {
 
   blocTest<EditorCubit, EditorState>(
     'Given bloc in loading state, when trying to save mode, then it fails',
-    build: () => EditorCubit(notesRepository: notesRepository),
+    build: () => EditorCubit(
+      notesRepository: notesRepository,
+      defaultTitle: 'default',
+    ),
     seed: () => EditorState.loading(),
     act: (cubit) => cubit.save(title: 'title', content: 'content'),
     errors: () => [
@@ -85,7 +103,11 @@ void main() {
     'Given bloc in editing state, when trying to save mode, then it succeeds',
     build: () {
       when(notesRepository.saveNote(any)).thenAnswer((realInvocation) => Future.value());
-      return EditorCubit(notesRepository: notesRepository, noteIdGenerator: () => '1');
+      return EditorCubit(
+        notesRepository: notesRepository,
+        noteIdGenerator: () => '1',
+        defaultTitle: 'default',
+      );
     },
     seed: () => EditorState.editing(note),
     act: (cubit) async => cubit.save(title: modifiedTitle, content: modifiedContent),

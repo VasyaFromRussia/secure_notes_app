@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:secure_notes/feature/notes/notes_model.dart';
+import 'package:secure_notes/utils/date.dart';
 import 'package:secure_notes/utils/exception.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,6 +19,7 @@ class EditorState with _$EditorState {
 class EditorCubit extends Cubit<EditorState> {
   EditorCubit({
     required this.notesRepository,
+    required this.defaultTitle,
     NoteIdGenerator? noteIdGenerator,
     CurrentDateTimeProvider? currentDateTimeProvider,
   }) : super(EditorState.loading()) {
@@ -26,6 +28,7 @@ class EditorCubit extends Cubit<EditorState> {
   }
 
   final NotesRepository notesRepository;
+  final String defaultTitle;
   late final NoteIdGenerator noteIdGenerator;
   late final CurrentDateTimeProvider currentDateTimeProvider;
 
@@ -61,7 +64,8 @@ class EditorCubit extends Cubit<EditorState> {
   }) async {
     final currentState = state;
     if (currentState is EditorEditingState) {
-      final modifiedNote = currentState.note.update(title, content);
+      final modifiedTitle = title.isNotEmpty ? title : defaultTitle;
+      final modifiedNote = currentState.note.update(modifiedTitle, content);
       await notesRepository.saveNote(modifiedNote);
       emit(EditorState.reading(modifiedNote));
     } else {
@@ -71,5 +75,3 @@ class EditorCubit extends Cubit<EditorState> {
 }
 
 typedef NoteIdGenerator = String Function();
-
-typedef CurrentDateTimeProvider = DateTime Function();

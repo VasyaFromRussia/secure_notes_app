@@ -1,0 +1,1 @@
+typedef CurrentDateTimeProvider = DateTime Function();

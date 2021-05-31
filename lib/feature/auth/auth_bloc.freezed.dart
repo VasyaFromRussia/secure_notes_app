@@ -20,10 +20,12 @@ class _$AuthStateTearOff {
     return const AuthLoadingState();
   }
 
-  AuthSignInState signIn({required bool hasError, required bool succeed}) {
+  AuthSignInState signIn(
+      {required bool hasError, required bool succeed, required DateTime time}) {
     return AuthSignInState(
       hasError: hasError,
       succeed: succeed,
+      time: time,
     );
   }
 
@@ -42,14 +44,15 @@ mixin _$AuthState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(bool hasError, bool succeed) signIn,
+    required TResult Function(bool hasError, bool succeed, DateTime time)
+        signIn,
     required TResult Function(bool succeed) signUp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(bool hasError, bool succeed)? signIn,
+    TResult Function(bool hasError, bool succeed, DateTime time)? signIn,
     TResult Function(bool succeed)? signUp,
     required TResult orElse(),
   }) =>
@@ -126,7 +129,8 @@ class _$AuthLoadingState implements AuthLoadingState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(bool hasError, bool succeed) signIn,
+    required TResult Function(bool hasError, bool succeed, DateTime time)
+        signIn,
     required TResult Function(bool succeed) signUp,
   }) {
     return loading();
@@ -136,7 +140,7 @@ class _$AuthLoadingState implements AuthLoadingState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(bool hasError, bool succeed)? signIn,
+    TResult Function(bool hasError, bool succeed, DateTime time)? signIn,
     TResult Function(bool succeed)? signUp,
     required TResult orElse(),
   }) {
@@ -180,7 +184,7 @@ abstract class $AuthSignInStateCopyWith<$Res> {
   factory $AuthSignInStateCopyWith(
           AuthSignInState value, $Res Function(AuthSignInState) then) =
       _$AuthSignInStateCopyWithImpl<$Res>;
-  $Res call({bool hasError, bool succeed});
+  $Res call({bool hasError, bool succeed, DateTime time});
 }
 
 /// @nodoc
@@ -197,6 +201,7 @@ class _$AuthSignInStateCopyWithImpl<$Res> extends _$AuthStateCopyWithImpl<$Res>
   $Res call({
     Object? hasError = freezed,
     Object? succeed = freezed,
+    Object? time = freezed,
   }) {
     return _then(AuthSignInState(
       hasError: hasError == freezed
@@ -207,6 +212,10 @@ class _$AuthSignInStateCopyWithImpl<$Res> extends _$AuthStateCopyWithImpl<$Res>
           ? _value.succeed
           : succeed // ignore: cast_nullable_to_non_nullable
               as bool,
+      time: time == freezed
+          ? _value.time
+          : time // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -214,16 +223,19 @@ class _$AuthSignInStateCopyWithImpl<$Res> extends _$AuthStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$AuthSignInState implements AuthSignInState {
-  const _$AuthSignInState({required this.hasError, required this.succeed});
+  const _$AuthSignInState(
+      {required this.hasError, required this.succeed, required this.time});
 
   @override
   final bool hasError;
   @override
   final bool succeed;
+  @override
+  final DateTime time;
 
   @override
   String toString() {
-    return 'AuthState.signIn(hasError: $hasError, succeed: $succeed)';
+    return 'AuthState.signIn(hasError: $hasError, succeed: $succeed, time: $time)';
   }
 
   @override
@@ -234,14 +246,18 @@ class _$AuthSignInState implements AuthSignInState {
                 const DeepCollectionEquality()
                     .equals(other.hasError, hasError)) &&
             (identical(other.succeed, succeed) ||
-                const DeepCollectionEquality().equals(other.succeed, succeed)));
+                const DeepCollectionEquality()
+                    .equals(other.succeed, succeed)) &&
+            (identical(other.time, time) ||
+                const DeepCollectionEquality().equals(other.time, time)));
   }
 
   @override
   int get hashCode =>
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(hasError) ^
-      const DeepCollectionEquality().hash(succeed);
+      const DeepCollectionEquality().hash(succeed) ^
+      const DeepCollectionEquality().hash(time);
 
   @JsonKey(ignore: true)
   @override
@@ -252,22 +268,23 @@ class _$AuthSignInState implements AuthSignInState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(bool hasError, bool succeed) signIn,
+    required TResult Function(bool hasError, bool succeed, DateTime time)
+        signIn,
     required TResult Function(bool succeed) signUp,
   }) {
-    return signIn(hasError, succeed);
+    return signIn(hasError, succeed, time);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(bool hasError, bool succeed)? signIn,
+    TResult Function(bool hasError, bool succeed, DateTime time)? signIn,
     TResult Function(bool succeed)? signUp,
     required TResult orElse(),
   }) {
     if (signIn != null) {
-      return signIn(hasError, succeed);
+      return signIn(hasError, succeed, time);
     }
     return orElse();
   }
@@ -299,10 +316,13 @@ class _$AuthSignInState implements AuthSignInState {
 
 abstract class AuthSignInState implements AuthState {
   const factory AuthSignInState(
-      {required bool hasError, required bool succeed}) = _$AuthSignInState;
+      {required bool hasError,
+      required bool succeed,
+      required DateTime time}) = _$AuthSignInState;
 
   bool get hasError => throw _privateConstructorUsedError;
   bool get succeed => throw _privateConstructorUsedError;
+  DateTime get time => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $AuthSignInStateCopyWith<AuthSignInState> get copyWith =>
       throw _privateConstructorUsedError;
@@ -373,7 +393,8 @@ class _$AuthSignUpState implements AuthSignUpState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
-    required TResult Function(bool hasError, bool succeed) signIn,
+    required TResult Function(bool hasError, bool succeed, DateTime time)
+        signIn,
     required TResult Function(bool succeed) signUp,
   }) {
     return signUp(succeed);
@@ -383,7 +404,7 @@ class _$AuthSignUpState implements AuthSignUpState {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
-    TResult Function(bool hasError, bool succeed)? signIn,
+    TResult Function(bool hasError, bool succeed, DateTime time)? signIn,
     TResult Function(bool succeed)? signUp,
     required TResult orElse(),
   }) {

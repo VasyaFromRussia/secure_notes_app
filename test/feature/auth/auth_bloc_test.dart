@@ -16,6 +16,9 @@ void main() {
   final NotesRepository notesRepository = MockNotesRepository();
   final AuthRepository authRepository = MockAuthRepository();
 
+  final now = DateTime.utc(2021);
+  final currentDateTimeProvider = () => now;
+
   setUp(() {
     reset(notesRepository);
     reset(authRepository);
@@ -28,6 +31,7 @@ void main() {
       return AuthCubit(
         notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
+        currentDateTimeProvider: currentDateTimeProvider,
       );
     },
     act: (cubit) => cubit.init(),
@@ -44,12 +48,13 @@ void main() {
       return AuthCubit(
         notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
+        currentDateTimeProvider: currentDateTimeProvider,
       );
     },
     act: (cubit) => cubit.init(),
     expect: () => [
       AuthState.loading(),
-      AuthState.signIn(succeed: false, hasError: false),
+      AuthState.signIn(succeed: false, hasError: false, time: now),
     ],
   );
 
@@ -61,12 +66,13 @@ void main() {
       return AuthCubit(
         notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
+        currentDateTimeProvider: currentDateTimeProvider,
       );
     },
-    seed: () => AuthState.signIn(succeed: false, hasError: false),
+    seed: () => AuthState.signIn(succeed: false, hasError: false, time: now),
     act: (cubit) async => cubit.signIn(password),
     expect: () => [
-      AuthState.signIn(succeed: true, hasError: false),
+      AuthState.signIn(succeed: true, hasError: false, time: now),
     ],
   );
 
@@ -77,12 +83,13 @@ void main() {
       return AuthCubit(
         notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
+        currentDateTimeProvider: currentDateTimeProvider,
       );
     },
-    seed: () => AuthState.signIn(succeed: false, hasError: false),
+    seed: () => AuthState.signIn(succeed: false, hasError: false, time: now),
     act: (cubit) async => cubit.signIn(password),
     expect: () => [
-      AuthState.signIn(succeed: false, hasError: true),
+      AuthState.signIn(succeed: false, hasError: true, time: now),
     ],
   );
 
@@ -93,6 +100,7 @@ void main() {
       return AuthCubit(
         notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
+        currentDateTimeProvider: currentDateTimeProvider,
       );
     },
     seed: () => AuthState.signUp(succeed: false),
@@ -110,9 +118,10 @@ void main() {
       return AuthCubit(
         notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
+        currentDateTimeProvider: currentDateTimeProvider,
       );
     },
-    seed: () => AuthState.signIn(succeed: false, hasError: false),
+    seed: () => AuthState.signIn(succeed: false, hasError: false, time: now),
     act: (cubit) async => cubit.signOut(),
     verify: (_) {
       verify(notesRepository.deleteAll());

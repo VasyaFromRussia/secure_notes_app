@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:secure_notes/feature/auth/auth_model.dart';
 import 'package:secure_notes/feature/notes/notes_model.dart';
+import 'package:secure_notes/utils/date.dart';
 
 part 'auth_bloc.freezed.dart';
 
@@ -12,6 +13,7 @@ class AuthState with _$AuthState {
   const factory AuthState.signIn({
     required bool hasError,
     required bool succeed,
+    required DateTime time,
   }) = AuthSignInState;
 
   const factory AuthState.signUp({
@@ -23,15 +25,19 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit({
     required this.authRepository,
     required this.notesRepositoryProvider,
-  }) : super(AuthState.loading());
+    CurrentDateTimeProvider? currentDateTimeProvider,
+  }) : super(AuthState.loading()) {
+    _currentTime = currentDateTimeProvider ?? () => DateTime.now();
+  }
 
   final AuthRepository authRepository;
   final Future<NotesRepository> Function() notesRepositoryProvider;
+  late final CurrentDateTimeProvider _currentTime;
 
   Future<void> init() async {
     emit(AuthState.loading());
     if (await authRepository.hasCredentials()) {
-      emit(AuthState.signIn(hasError: false, succeed: false));
+      emit(AuthState.signIn(hasError: false, succeed: false, time: _currentTime()));
     } else {
       emit(AuthState.signUp(succeed: false));
     }
@@ -39,7 +45,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> signIn(String password) async {
     final succeed = await authRepository.signIn(password);
-    emit(AuthState.signIn(hasError: !succeed, succeed: succeed));
+    emit(AuthState.signIn(hasError: !succeed, succeed: succeed, time: _currentTime()));
   }
 
   Future<void> signUp(String password) async {
@@ -48,8 +54,8 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> signOut() async {
-    await authRepository.signOut();
     await notesRepositoryProvider().then((repository) => repository.deleteAll());
+    await authRepository.signOut();
     emit(AuthState.signUp(succeed: false));
   }
 }

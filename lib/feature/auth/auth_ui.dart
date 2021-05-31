@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:secure_notes/feature/auth/auth_bloc.dart';
+import 'package:secure_notes/feature/common/common_ui.dart';
+import 'package:secure_notes/feature/resources/drawables.dart';
+import 'package:secure_notes/feature/resources/strings.dart';
+import 'package:secure_notes/utils/resources.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -17,20 +22,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
         body: Column(
           children: [
             Expanded(
-              child: Container(
-                color: Colors.pink,
+              child: Center(
+                child: SvgPicture.asset(Drawables.imageSignUp),
               ),
             ),
-            Container(
-              padding: EdgeInsets.all(20),
+            CardContainer(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Greeting'),
+                  Greeting(),
+                  SizedBox(height: 16),
+                  Text(AppStrings.signUpDescription, style: context.textTheme.bodyText1),
+                  SizedBox(height: 8),
                   PasswordInputWidget(
                     controller: _controller,
                     onConfirmTap: BlocProvider.of<AuthCubit>(context).signUp,
                   ),
+                  SizedBox(height: 10),
                 ],
               ),
             ),
@@ -54,20 +62,30 @@ class _SignInScreenState extends State<SignInScreen> {
         body: Column(
           children: [
             Expanded(
-              child: Container(
-                color: Colors.amber,
+              child: Center(
+                child: SvgPicture.asset(Drawables.imageSignUp),
               ),
             ),
-            Container(
-              padding: EdgeInsets.all(20),
+            CardContainer(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Greeting'),
+                  Greeting(),
+                  SizedBox(height: 16),
+                  Text(AppStrings.signInDescription, style: context.textTheme.bodyText1),
+                  SizedBox(height: 8),
                   PasswordInputWidget(
                     controller: _controller,
                     onConfirmTap: BlocProvider.of<AuthCubit>(context).signIn,
                   ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: TextButton(
+                      onPressed: BlocProvider.of<AuthCubit>(context).signOut,
+                      child: Text(AppStrings.forgotPassword),
+                    ),
+                  ),
+                  SizedBox(height: 10),
                 ],
               ),
             ),
@@ -118,17 +136,19 @@ class _PasswordInputWidgetState extends State<PasswordInputWidget> {
             Expanded(
               child: TextField(
                 controller: widget.controller,
+                style: context.textTheme.headline6,
+                obscureText: true,
                 decoration: InputDecoration(
-                  hintText: 'Password',
+                  hintText: AppStrings.passwordHint,
+                  hintStyle: context.textTheme.headline6?.copyWith(color: context.theme.disabledColor),
                   contentPadding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(width: 4),
-                    borderRadius: BorderRadius.horizontal(left: Radius.circular(8)),
-                  ),
+                  border: _buildBorder(context.theme.disabledColor),
+                  enabledBorder: _buildBorder(context.theme.disabledColor),
+                  focusedBorder: _buildBorder(context.theme.accentColor),
                 ),
               ),
             ),
-            SendButton(
+            ConfirmationButton(
               isEnabled: _isEnabled,
               onTap: () => widget.onConfirmTap(widget.controller.text),
               radius: 8,
@@ -136,10 +156,15 @@ class _PasswordInputWidgetState extends State<PasswordInputWidget> {
           ],
         ),
       );
+
+  InputBorder _buildBorder(Color color) => OutlineInputBorder(
+        borderSide: BorderSide(width: 1, color: color),
+        borderRadius: BorderRadius.horizontal(left: Radius.circular(8)),
+      );
 }
 
-class SendButton extends StatelessWidget {
-  const SendButton({
+class ConfirmationButton extends StatelessWidget {
+  const ConfirmationButton({
     Key? key,
     required this.isEnabled,
     required this.onTap,
@@ -154,7 +179,7 @@ class SendButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Material(
-        color: isEnabled ? Theme.of(context).accentColor : Theme.of(context).disabledColor,
+        color: isEnabled ? context.theme.accentColor : context.theme.disabledColor,
         borderRadius: _borderRadius,
         child: InkWell(
           onTap: isEnabled ? onTap : null,
@@ -164,7 +189,7 @@ class SendButton extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Center(
                 child: Icon(
-                  Icons.send,
+                  Icons.lock_open,
                   color: Colors.white,
                 ),
               ),
@@ -172,4 +197,11 @@ class SendButton extends StatelessWidget {
           ),
         ),
       );
+}
+
+class Greeting extends StatelessWidget {
+  const Greeting({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Text(AppStrings.greeting, style: context.textTheme.headline5);
 }

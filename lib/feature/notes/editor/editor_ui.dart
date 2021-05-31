@@ -1,17 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:secure_notes/feature/common/common_ui.dart';
 import 'package:secure_notes/feature/notes/editor/editor_bloc.dart';
 import 'package:secure_notes/feature/notes/editor/editor_bloc_ui.dart';
 import 'package:secure_notes/feature/notes/notes_model.dart';
+import 'package:secure_notes/feature/resources/strings.dart';
 import 'package:secure_notes/feature/resources/theme.dart';
 
-class EditorScreen extends StatefulWidget {
-  const EditorScreen({
-    Key? key,
-    this.noteId,
-  }) : super(key: key);
+part 'editor_ui.freezed.dart';
 
-  final String? noteId;
+@freezed
+class EditorScreenArguments with _$EditorScreenArguments {
+  const factory EditorScreenArguments({
+    String? noteId,
+    String? heroTag,
+  }) = _EditorScreenArguments;
+}
+
+class EditorScreen extends StatefulWidget {
+  EditorScreen({
+    Key? key,
+    required EditorScreenArguments arguments,
+  }) : super(key: key) {
+    noteId = arguments.noteId;
+    heroTag = arguments.heroTag;
+  }
+
+  late final String? noteId;
+  late final String? heroTag;
 
   @override
   _EditorScreenState createState() => _EditorScreenState();
@@ -27,19 +44,23 @@ class _EditorScreenState extends State<EditorScreen> {
         child: Builder(
           builder: (context) => BlocConsumer<EditorCubit, EditorState>(
             bloc: BlocProvider.of<EditorCubit>(context),
-            builder: (context, state) => Scaffold(
-              appBar: _buildAppBar(context, state),
-              body: _buildBody(context, state),
-            ),
-            listener: (oldState, newState) {
-              if (newState is EditorReadingState) {
-                _titleController.text = newState.note.title;
-                _contentController.text = newState.note.content;
-              }
-            },
+            builder: _buildScreen,
+            listener: _handleStateChange,
           ),
         ),
       );
+
+  Widget _buildScreen(BuildContext context, EditorState state) => Scaffold(
+        appBar: _buildAppBar(context, state),
+        body: _buildBody(context, state),
+      );
+
+  void _handleStateChange(BuildContext context, EditorState newState) {
+    if (newState is EditorReadingState) {
+      _titleController.text = newState.note.title;
+      _contentController.text = newState.note.content;
+    }
+  }
 
   AppBar _buildAppBar(BuildContext context, EditorState state) => AppBar(
         elevation: 0,
@@ -57,42 +78,44 @@ class _EditorScreenState extends State<EditorScreen> {
         editing: (note) => _buildEditingState(context),
       );
 
-  Widget _buildLoadingState(BuildContext context) => Center(child: Text('loading'));
+  Widget _buildLoadingState(BuildContext context) => LoaderWidget();
 
-  Widget _buildReadingState(BuildContext context) => _buildNoteArea(context, enabled: false);
+  Widget _buildReadingState(BuildContext context) => _buildDecoratedNoteArea(context, enabled: false);
 
-  Widget _buildEditingState(BuildContext context) => _buildNoteArea(context, enabled: true);
+  Widget _buildEditingState(BuildContext context) => _buildDecoratedNoteArea(context, enabled: true);
 
-  Widget _buildNoteArea(BuildContext context, {required bool enabled}) => Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).backgroundColor,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              _buildTitleInput(context, enabled: enabled),
-              _buildContentInput(context, enabled: enabled),
-            ],
-          ),
+  Widget _buildDecoratedNoteArea(BuildContext context, {required bool enabled}) => widget.heroTag != null
+      ? Hero(
+          tag: widget.heroTag!,
+          child: _buildNoteArea(context, enabled: enabled),
+        )
+      : _buildNoteArea(context, enabled: enabled);
+
+  Widget _buildNoteArea(BuildContext context, {required bool enabled}) => CardContainer(
+        child: Column(
+          children: [
+            _buildTitleInput(context, enabled: enabled),
+            Expanded(child: _buildContentInput(context, enabled: enabled)),
+          ],
         ),
       );
 
   Widget _buildTitleInput(BuildContext context, {required bool enabled}) => TextInputWidget(
         controller: _titleController,
         enabled: enabled,
-        hint: 'Заголовок',
+        hint: AppStrings.editorTitleHint,
         textStyle: Theme.of(context).textTheme.headline5,
         hintStyle: Theme.of(context).textTheme.headline5?.copyWith(color: AppColors.inactiveColor),
+        isMultiline: false,
       );
 
   Widget _buildContentInput(BuildContext context, {required bool enabled}) => TextInputWidget(
         controller: _contentController,
         enabled: enabled,
-        hint: 'Заметка',
+        hint: AppStrings.editorContentHint,
         textStyle: Theme.of(context).textTheme.bodyText1,
         hintStyle: Theme.of(context).textTheme.bodyText1?.copyWith(color: AppColors.inactiveColor),
+        isMultiline: true,
       );
 
   Widget _buildEditActionButton(BuildContext context) => IconButton(
@@ -117,6 +140,7 @@ class TextInputWidget extends StatelessWidget {
     required this.textStyle,
     required this.hint,
     required this.hintStyle,
+    required this.isMultiline,
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -124,12 +148,14 @@ class TextInputWidget extends StatelessWidget {
   final TextStyle? textStyle;
   final String hint;
   final TextStyle? hintStyle;
+  final bool isMultiline;
 
   @override
   Widget build(BuildContext context) => TextField(
         controller: controller,
         enabled: enabled,
         style: textStyle,
+        maxLines: isMultiline ? null : 1,
         decoration: InputDecoration(
           hintStyle: hintStyle,
           hintText: hint,

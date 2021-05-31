@@ -19,7 +19,13 @@ class AppNavigator extends StatelessWidget {
 
   static void navigateToNotes(BuildContext context) => Navigator.of(context).pushReplacementNamed(_routeNotes);
 
-  static void navigateToEditor(BuildContext context, String? noteId) => Navigator.of(context).pushNamed(_routeEditor, arguments: noteId);
+  static void navigateToEditor(BuildContext context, String? noteId) => Navigator.of(context).pushNamed(
+        _routeEditor,
+        arguments: EditorScreenArguments(
+          noteId: noteId,
+          heroTag: noteId,
+        ),
+      );
 
   const AppNavigator({Key? key}) : super(key: key);
 
@@ -40,7 +46,8 @@ class AppNavigator extends StatelessWidget {
       case _routeNotes:
         return NotesBlocProvider(child: NotesListScreen());
       case _routeEditor:
-        return NotesBlocProvider(child: EditorScreen(noteId: settings.arguments as String?));
+        final arguments = settings.arguments as EditorScreenArguments;
+        return NotesBlocProvider(child: EditorScreen(arguments: arguments));
       default:
         throw 'Unknown route: ${settings.name}';
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:secure_notes/feature/common/common_ui.dart';
 import 'package:secure_notes/feature/notes/notes_bloc.dart';
 import 'package:secure_notes/feature/notes/notes_model.dart';
 import 'package:secure_notes/utils/di.dart';
@@ -28,7 +29,5 @@ class NotesBlocProvider extends StatelessWidget {
         },
       );
 
-  Widget _buildLoadingState(BuildContext context) => Center(
-        child: CircularProgressIndicator(),
-      );
+  Widget _buildLoadingState(BuildContext context) => LoaderWidget();
 }

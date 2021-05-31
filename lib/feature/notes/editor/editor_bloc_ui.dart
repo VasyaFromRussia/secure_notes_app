@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:secure_notes/feature/common/common_ui.dart';
 import 'package:secure_notes/feature/notes/editor/editor_bloc.dart';
 import 'package:secure_notes/feature/notes/notes_model.dart';
+import 'package:secure_notes/feature/resources/strings.dart';
 import 'package:secure_notes/utils/di.dart';
 
 class EditorBlocProvider extends StatelessWidget {
@@ -20,17 +22,16 @@ class EditorBlocProvider extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.data != null) {
             return BlocProvider(
-              create: (context) => EditorCubit(notesRepository: snapshot.data as NotesRepository)..init(id: noteId),
+              create: (context) => EditorCubit(
+                notesRepository: snapshot.data as NotesRepository,
+                defaultTitle: AppStrings.editorDefaultTitle,
+              )..init(id: noteId),
               lazy: true,
               child: child,
             );
           } else {
-            return _buildLoadingState(context);
+            return LoaderWidget();
           }
         },
-      );
-
-  Widget _buildLoadingState(BuildContext context) => Center(
-        child: CircularProgressIndicator(),
       );
 }

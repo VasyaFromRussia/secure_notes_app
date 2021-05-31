@@ -67,10 +67,12 @@ class AuthStateResolver extends StatelessWidget {
   Widget build(BuildContext context) => BlocListener<AuthCubit, AuthState>(
         bloc: BlocProvider.of<AuthCubit>(context),
         listener: (oldState, newState) => newState.maybeWhen(
-          signIn: (hasError, succeed) {
+          signIn: (hasError, succeed, time) {
             if (succeed) {
               AppNavigator.navigateToNotes(context);
-            } else if (!hasError) {
+            } else if (hasError) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Неверный пароль!')));
+            } else {
               AppNavigator.navigateToSignIn(context);
             }
           },
