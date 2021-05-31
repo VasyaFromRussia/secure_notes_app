@@ -203,7 +203,7 @@ class ConfirmationButton extends StatelessWidget {
               child: Center(
                 child: Icon(
                   Icons.lock_open,
-                  color: Colors.white,
+                  color: context.theme.backgroundColor,
                 ),
               ),
             ),

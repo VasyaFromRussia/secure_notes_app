@@ -1,4 +1,6 @@
 abstract class AppStrings {
+  static const splashTitle = 'Secure Notes';
+
   static const greeting = 'Привет, это Secure Notes!';
   static const signUpDescription = 'Придумайте надёжный пароль, чтобы защитить свои заметки';
   static const signInDescription = 'Введите пароль, чтобы получить доступ к заметкам';
