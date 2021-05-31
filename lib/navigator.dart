@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:secure_notes/feature/auth/auth_ui.dart';
+import 'package:secure_notes/feature/notes/editor/editor_ui.dart';
+import 'package:secure_notes/feature/notes/notes_bloc_ui.dart';
 import 'package:secure_notes/feature/notes/notes_ui.dart';
 import 'package:secure_notes/feature/splash/splash_ui.dart';
 import 'package:secure_notes/main.dart';
@@ -38,7 +40,7 @@ class AppNavigator extends StatelessWidget {
       case _routeNotes:
         return NotesBlocProvider(child: NotesListScreen());
       case _routeEditor:
-        return NotesBlocProvider(child: Container(color: Colors.deepPurple));
+        return NotesBlocProvider(child: EditorScreen(noteId: settings.arguments as String?));
       default:
         throw 'Unknown route: ${settings.name}';
     }

@@ -9,6 +9,7 @@ class NotesListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        appBar: _buildAppBar(context),
         body: BlocBuilder<NotesCubit, NotesState>(
           bloc: BlocProvider.of<NotesCubit>(context),
           builder: (context, state) => state.when(
@@ -21,6 +22,8 @@ class NotesListScreen extends StatelessWidget {
           onPressed: () => AppNavigator.navigateEditor(context, null),
         ),
       );
+
+  AppBar _buildAppBar(BuildContext context) => AppBar(elevation: 0, backgroundColor: Colors.transparent);
 
   Widget _buildLoadingState(BuildContext context) => Container(child: Center(child: Text('loading')));
 

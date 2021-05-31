@@ -10,6 +10,8 @@ import 'package:secure_notes/utils/di.dart';
 import 'package:secure_notes/utils/io.dart';
 
 class NotesModule implements DiModule {
+  static const _encryptionKeyLength = 16;
+
   static const _noteDirectoryName = 'notes';
 
   static const _storageTitles = 'titles';
@@ -43,7 +45,7 @@ class NotesModule implements DiModule {
       throw 'Invalid app state: cannot access encrypted storage without key';
     }
     return EncryptedFileStorage(
-      key: key,
+      key: key.substring(0, _encryptionKeyLength),
       delegate: TypedPlainTextFileStorage(
         directory: notesDirectory,
         fileExtension: fileExtension,
