@@ -33,7 +33,7 @@ class PlainTextFileStorage implements FileStorage<String> {
   }
 
   @override
-  Future<List<File>> getFiles() => directory
+  Future<List<File>> getFiles() => _getDirectorySafely()
       .list()
       .where(
         (entity) => entity is File,
@@ -41,7 +41,14 @@ class PlainTextFileStorage implements FileStorage<String> {
       .toList()
       .then((value) => value.cast());
 
-  Future<File> _getFile(String filename, {bool create = false}) async => directory.getFile(filename, create: create);
+  Future<File> _getFile(String filename, {bool create = false}) async => _getDirectorySafely().getFile(filename, create: create);
+
+  Directory _getDirectorySafely() {
+    if (!directory.existsSync()) {
+      directory.createSync(recursive: true);
+    }
+    return directory;
+  }
 }
 
 class TypedPlainTextFileStorage implements FileStorage<String> {
