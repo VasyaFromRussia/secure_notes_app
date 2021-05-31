@@ -1,9 +1,11 @@
 abstract class AuthRepository {
-  Stream<bool> listenAuthorizationState();
+  Future<bool> hasCredentials();
 
   Future<void> signUp(String password);
 
-  Future<void> signIn(String password);
+  Future<bool> signIn(String password);
 
-  Future<String> getKey();
+  Future<String?> getKey();
+
+  Future<void> signOut();
 }

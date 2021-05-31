@@ -26,6 +26,13 @@ class PlainTextFileStorage implements FileStorage<String> {
   }
 
   @override
+  Future<void> clear() async {
+    if (await directory.exists()) {
+      await directory.delete(recursive: true);
+    }
+  }
+
+  @override
   Future<List<File>> getFiles() => directory
       .list()
       .where(
@@ -55,6 +62,9 @@ class TypedPlainTextFileStorage implements FileStorage<String> {
 
   @override
   Future<DateTime> lastModifiedAt(String filename) => _delegate.lastModifiedAt(_composeFileName(filename));
+
+  @override
+  Future<void> clear() => _delegate.clear();
 
   @override
   Future<List<File>> getFiles() => _delegate.getFiles().then((value) => value
@@ -88,6 +98,9 @@ class EncryptedFileStorage implements FileStorage<String> {
 
   @override
   Future<DateTime> lastModifiedAt(String filename) => delegate.lastModifiedAt(filename);
+
+  @override
+  Future<void> clear() => delegate.clear();
 
   @override
   Future<List<File>> getFiles() => delegate.getFiles();

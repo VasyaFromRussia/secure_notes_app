@@ -17,6 +17,7 @@ dependencies:
   freezed_annotation: ^0.14.2
   bloc: ^7.0.0
   flutter_bloc: ^7.0.1
+  flutter_secure_storage: ^4.2.0
 
 dev_dependencies:
   flutter_test:

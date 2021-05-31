@@ -14,7 +14,9 @@ void main() {
   });
 
   tearDown(() async {
-    await testDirectory.delete(recursive: true);
+    if (await testDirectory.exists()) {
+      await testDirectory.delete(recursive: true);
+    }
   });
 
   group(
@@ -60,6 +62,19 @@ void main() {
           expect(files.length, 2);
           expect(fileNames.contains(firstFileName), true);
           expect(fileNames.contains(secondFileName), true);
+        },
+      );
+
+      test(
+        'Given directory with files, when clear storage, then directory is removed',
+        () async {
+          final storage = PlainTextFileStorage(directory: testDirectory);
+          final filename = 'some_file';
+          await storage.write(filename, 'contents');
+
+          await storage.clear();
+
+          expect(testDirectory.existsSync(), false);
         },
       );
     },

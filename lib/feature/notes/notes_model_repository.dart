@@ -50,6 +50,12 @@ class NotesRepositoryImpl implements NotesRepository {
   }
 
   @override
+  Future<void> deleteAll() async {
+    await titleStorage.clear();
+    await contentStorage.clear();
+  }
+
+  @override
   Future<void> reset() async {
     for (var controller in _actionStreamControllers) {
       await controller.close();

@@ -38,4 +38,13 @@ class MockNotesRepository extends _i1.Mock implements _i2.NotesRepository {
       (super.noSuchMethod(Invocation.method(#saveNote, [note]),
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future.value()) as _i3.Future<void>);
+  @override
+  _i3.Future<void> deleteAll() =>
+      (super.noSuchMethod(Invocation.method(#deleteAll, []),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future.value()) as _i3.Future<void>);
+  @override
+  _i3.Future<void> reset() => (super.noSuchMethod(Invocation.method(#reset, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future.value()) as _i3.Future<void>);
 }

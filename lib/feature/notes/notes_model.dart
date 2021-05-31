@@ -12,6 +12,8 @@ abstract class NotesRepository {
 
   Future<void> saveNote(NoteModel note);
 
+  Future<void> deleteAll();
+
   Future<void> reset();
 }
 
@@ -21,6 +23,8 @@ abstract class FileStorage<T> {
   Future<void> write(String filename, T contents);
 
   Future<DateTime> lastModifiedAt(String filename);
+
+  Future<void> clear();
 
   Future<List<File>> getFiles();
 }
