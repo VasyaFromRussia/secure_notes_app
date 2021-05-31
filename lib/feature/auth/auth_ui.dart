@@ -18,33 +18,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _controller = TextEditingController();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: SvgPicture.asset(Drawables.imageSignUp),
+  Widget build(BuildContext context) {
+    final imageSize = MediaQuery.of(context).size.width;
+    return Scaffold(
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Image.asset(
+                Drawables.imageSignUp,
+                width: imageSize,
+                height: imageSize,
               ),
             ),
-            CardContainer(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Greeting(),
-                  SizedBox(height: 16),
-                  Text(AppStrings.signUpDescription, style: context.textTheme.bodyText1),
-                  SizedBox(height: 8),
-                  PasswordInputWidget(
-                    controller: _controller,
-                    onConfirmTap: BlocProvider.of<AuthCubit>(context).signUp,
-                  ),
-                  SizedBox(height: 10),
-                ],
-              ),
+          ),
+          CardContainer(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Greeting(),
+                SizedBox(height: 16),
+                Text(AppStrings.signUpDescription, style: context.textTheme.bodyText1),
+                SizedBox(height: 8),
+                PasswordInputWidget(
+                  controller: _controller,
+                  onConfirmTap: BlocProvider.of<AuthCubit>(context).signUp,
+                ),
+                SizedBox(height: 10),
+              ],
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class SignInScreen extends StatefulWidget {
@@ -58,40 +65,47 @@ class _SignInScreenState extends State<SignInScreen> {
   final _controller = TextEditingController();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: SvgPicture.asset(Drawables.imageSignUp),
+  Widget build(BuildContext context) {
+    final imageSize = MediaQuery.of(context).size.width;
+    return Scaffold(
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Image.asset(
+                Drawables.imageSignIn,
+                width: imageSize,
+                height: imageSize,
               ),
             ),
-            CardContainer(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Greeting(),
-                  SizedBox(height: 16),
-                  Text(AppStrings.signInDescription, style: context.textTheme.bodyText1),
-                  SizedBox(height: 8),
-                  PasswordInputWidget(
-                    controller: _controller,
-                    onConfirmTap: BlocProvider.of<AuthCubit>(context).signIn,
+          ),
+          CardContainer(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Greeting(),
+                SizedBox(height: 16),
+                Text(AppStrings.signInDescription, style: context.textTheme.bodyText1),
+                SizedBox(height: 8),
+                PasswordInputWidget(
+                  controller: _controller,
+                  onConfirmTap: BlocProvider.of<AuthCubit>(context).signIn,
+                ),
+                SizedBox(height: 10),
+                Center(
+                  child: TextButton(
+                    onPressed: BlocProvider.of<AuthCubit>(context).signOut,
+                    child: Text(AppStrings.forgotPassword),
                   ),
-                  SizedBox(height: 10),
-                  Center(
-                    child: TextButton(
-                      onPressed: BlocProvider.of<AuthCubit>(context).signOut,
-                      child: Text(AppStrings.forgotPassword),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                ],
-              ),
+                ),
+                SizedBox(height: 10),
+              ],
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   void dispose() {
