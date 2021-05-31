@@ -27,8 +27,12 @@ abstract class FileStorage<T> {
 
 @freezed
 class NoteModel with _$NoteModel {
-  factory NoteModel.empty() => NoteModel(
-        meta: NoteMetaModel.empty(),
+  factory NoteModel.empty({
+    required String id,
+    required DateTime now,
+  }) =>
+      NoteModel(
+        meta: NoteMetaModel.empty(id: id, now: now),
         content: '',
       );
 
@@ -40,10 +44,14 @@ class NoteModel with _$NoteModel {
 
 @freezed
 class NoteMetaModel with _$NoteMetaModel {
-  factory NoteMetaModel.empty() => NoteMetaModel(
-        id: Uuid().v1(),
+  factory NoteMetaModel.empty({
+    required String id,
+    required DateTime now,
+  }) =>
+      NoteMetaModel(
+        id: id,
         title: '',
-        lastModifiedAt: DateTime.now(),
+        lastModifiedAt: now,
       );
 
   const factory NoteMetaModel({

@@ -27,11 +27,11 @@ void main() {
 
   blocTest<EditorCubit, EditorState>(
     'Given bloc initializing, when id is not passed, then final state is Editing',
-    build: () => EditorCubit(notesRepository: notesRepository),
+    build: () => EditorCubit(notesRepository: notesRepository, noteIdGenerator: () => '1', currentDateTimeProvider: () => DateTime.utc(2021)),
     act: (cubit) => cubit.init(id: null),
     expect: () => [
       EditorState.loading(),
-      EditorState.editing(NoteModel.empty()),
+      EditorState.editing(NoteModel.empty(id: '1', now: DateTime.utc(2021))),
     ],
   );
 
@@ -39,7 +39,7 @@ void main() {
     'Given bloc initializing, when id is passed, then final state is Reading',
     build: () {
       when(notesRepository.getNote(any)).thenAnswer((invocation) => Future.value(note));
-      return EditorCubit(notesRepository: notesRepository);
+      return EditorCubit(notesRepository: notesRepository, noteIdGenerator: () => '1');
     },
     act: (cubit) => cubit.init(id: note.id),
     expect: () => [
@@ -85,7 +85,7 @@ void main() {
     'Given bloc in editing state, when trying to save mode, then it succeeds',
     build: () {
       when(notesRepository.saveNote(any)).thenAnswer((realInvocation) => Future.value());
-      return EditorCubit(notesRepository: notesRepository);
+      return EditorCubit(notesRepository: notesRepository, noteIdGenerator: () => '1');
     },
     seed: () => EditorState.editing(note),
     act: (cubit) async => cubit.save(title: modifiedTitle, content: modifiedContent),
