@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:secure_notes/feature/notes/editor/editor_bloc.dart';
 import 'package:secure_notes/feature/notes/editor/editor_bloc_ui.dart';
+import 'package:secure_notes/feature/notes/notes_model.dart';
+import 'package:secure_notes/feature/resources/theme.dart';
 
 class EditorScreen extends StatefulWidget {
   const EditorScreen({
@@ -23,28 +25,36 @@ class _EditorScreenState extends State<EditorScreen> {
   Widget build(BuildContext context) => EditorBlocProvider(
         noteId: widget.noteId,
         child: Builder(
-          builder: (context) => Scaffold(
-            appBar: _buildAppBar(context),
-            body: _buildBody(context),
+          builder: (context) => BlocConsumer<EditorCubit, EditorState>(
+            bloc: BlocProvider.of<EditorCubit>(context),
+            builder: (context, state) => Scaffold(
+              appBar: _buildAppBar(context, state),
+              body: _buildBody(context, state),
+            ),
+            listener: (oldState, newState) {
+              if (newState is EditorReadingState) {
+                _titleController.text = newState.note.title;
+                _contentController.text = newState.note.content;
+              }
+            },
           ),
         ),
       );
 
-  AppBar _buildAppBar(BuildContext context) => AppBar(
+  AppBar _buildAppBar(BuildContext context, EditorState state) => AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        actions: [
-          _buildConfirmationActionButton(context),
-        ],
+        actions: state.maybeWhen(
+          reading: (_) => [_buildEditActionButton(context)],
+          editing: (_) => [_buildConfirmationActionButton(context)],
+          orElse: () => [],
+        ),
       );
 
-  Widget _buildBody(BuildContext context) => BlocBuilder<EditorCubit, EditorState>(
-        bloc: BlocProvider.of<EditorCubit>(context),
-        builder: (context, state) => state.when(
-          loading: () => _buildLoadingState(context),
-          reading: (note) => _buildReadingState(context),
-          editing: (note) => _buildEditingState(context),
-        ),
+  Widget _buildBody(BuildContext context, EditorState state) => state.when(
+        loading: () => _buildLoadingState(context),
+        reading: (note) => _buildReadingState(context),
+        editing: (note) => _buildEditingState(context),
       );
 
   Widget _buildLoadingState(BuildContext context) => Center(child: Text('loading'));
@@ -62,11 +72,32 @@ class _EditorScreenState extends State<EditorScreen> {
           padding: EdgeInsets.all(20),
           child: Column(
             children: [
-              TextInputWidget(controller: _titleController, enabled: enabled),
-              TextInputWidget(controller: _contentController, enabled: enabled),
+              _buildTitleInput(context, enabled: enabled),
+              _buildContentInput(context, enabled: enabled),
             ],
           ),
         ),
+      );
+
+  Widget _buildTitleInput(BuildContext context, {required bool enabled}) => TextInputWidget(
+        controller: _titleController,
+        enabled: enabled,
+        hint: 'Заголовок',
+        textStyle: Theme.of(context).textTheme.headline5,
+        hintStyle: Theme.of(context).textTheme.headline5?.copyWith(color: AppColors.inactiveColor),
+      );
+
+  Widget _buildContentInput(BuildContext context, {required bool enabled}) => TextInputWidget(
+        controller: _contentController,
+        enabled: enabled,
+        hint: 'Заметка',
+        textStyle: Theme.of(context).textTheme.bodyText1,
+        hintStyle: Theme.of(context).textTheme.bodyText1?.copyWith(color: AppColors.inactiveColor),
+      );
+
+  Widget _buildEditActionButton(BuildContext context) => IconButton(
+        onPressed: BlocProvider.of<EditorCubit>(context).edit,
+        icon: Icon(Icons.edit),
       );
 
   Widget _buildConfirmationActionButton(BuildContext context) => IconButton(
@@ -83,14 +114,25 @@ class TextInputWidget extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.enabled,
+    required this.textStyle,
+    required this.hint,
+    required this.hintStyle,
   }) : super(key: key);
 
   final TextEditingController controller;
   final bool enabled;
+  final TextStyle? textStyle;
+  final String hint;
+  final TextStyle? hintStyle;
 
   @override
   Widget build(BuildContext context) => TextField(
         controller: controller,
         enabled: enabled,
+        style: textStyle,
+        decoration: InputDecoration(
+          hintStyle: hintStyle,
+          hintText: hint,
+        ).applyDefaults(Theme.of(context).inputDecorationTheme),
       );
 }

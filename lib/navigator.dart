@@ -17,9 +17,9 @@ class AppNavigator extends StatelessWidget {
 
   static void navigateToSignUp(BuildContext context) => Navigator.of(context).pushReplacementNamed(_routeSignUp);
 
-  static void navigateNotes(BuildContext context) => Navigator.of(context).pushReplacementNamed(_routeNotes);
+  static void navigateToNotes(BuildContext context) => Navigator.of(context).pushReplacementNamed(_routeNotes);
 
-  static void navigateEditor(BuildContext context, String? noteId) => Navigator.of(context).pushNamed(_routeEditor, arguments: noteId);
+  static void navigateToEditor(BuildContext context, String? noteId) => Navigator.of(context).pushNamed(_routeEditor, arguments: noteId);
 
   const AppNavigator({Key? key}) : super(key: key);
 

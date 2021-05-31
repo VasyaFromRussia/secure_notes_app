@@ -69,14 +69,14 @@ class AuthStateResolver extends StatelessWidget {
         listener: (oldState, newState) => newState.maybeWhen(
           signIn: (hasError, succeed) {
             if (succeed) {
-              AppNavigator.navigateNotes(context);
+              AppNavigator.navigateToNotes(context);
             } else if (!hasError) {
               AppNavigator.navigateToSignIn(context);
             }
           },
           signUp: (succeed) {
             if (succeed) {
-              AppNavigator.navigateNotes(context);
+              AppNavigator.navigateToNotes(context);
             } else {
               AppNavigator.navigateToSignUp(context);
             }

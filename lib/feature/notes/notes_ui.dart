@@ -18,8 +18,8 @@ class NotesListScreen extends StatelessWidget {
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.edit),
-          onPressed: () => AppNavigator.navigateEditor(context, null),
+          child: Icon(Icons.edit, color: Theme.of(context).backgroundColor),
+          onPressed: () => _navigateToEditor(context, null),
         ),
       );
 
@@ -31,8 +31,34 @@ class NotesListScreen extends StatelessWidget {
 
   Widget _buildEmptyState(BuildContext context) => Container(child: Center(child: Text('empty')));
 
-  Widget _buildListState(BuildContext context, List<NoteMetaModel> meta) => ListView.builder(
-        itemBuilder: (context, index) => Text(meta[index].id),
+  Widget _buildListState(BuildContext context, List<NoteMetaModel> meta) => ListView.separated(
+        padding: EdgeInsets.all(10),
+        itemBuilder: (context, index) => _buildListTile(context, meta[index]),
         itemCount: meta.length,
+        separatorBuilder: (context, index) => SizedBox(height: 16),
       );
+
+  Widget _buildListTile(BuildContext context, NoteMetaModel meta) => Hero(
+        tag: meta.id,
+        child: Material(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          color: Theme.of(context).backgroundColor,
+          child: InkWell(
+            onTap: () => _navigateToEditor(context, meta.id),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(meta.title, style: Theme.of(context).textTheme.headline5),
+                  SizedBox(height: 2),
+                  Text(meta.lastModifiedAt.toString(), style: Theme.of(context).textTheme.bodyText1),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+  void _navigateToEditor(BuildContext context, String? noteId) => AppNavigator.navigateToEditor(context, noteId);
 }
