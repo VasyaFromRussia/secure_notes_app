@@ -33,6 +33,7 @@ class AppNavigator extends StatelessWidget {
   Widget build(BuildContext context) => Navigator(
         initialRoute: _routeSplash,
         onGenerateRoute: (settings) => MaterialPageRoute(builder: (context) => _buildScreen(settings)),
+        observers: [HeroController()],
       );
 
   Widget _buildScreen(RouteSettings settings) {
