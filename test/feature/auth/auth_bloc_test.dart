@@ -26,7 +26,7 @@ void main() {
     build: () {
       when(authRepository.hasCredentials()).thenAnswer((_) async => false);
       return AuthCubit(
-        notesRepository: notesRepository,
+        notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
       );
     },
@@ -42,7 +42,7 @@ void main() {
     build: () {
       when(authRepository.hasCredentials()).thenAnswer((_) async => true);
       return AuthCubit(
-        notesRepository: notesRepository,
+        notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
       );
     },
@@ -59,7 +59,7 @@ void main() {
     build: () {
       when(authRepository.signIn(password)).thenAnswer((_) async => true);
       return AuthCubit(
-        notesRepository: notesRepository,
+        notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
       );
     },
@@ -75,7 +75,7 @@ void main() {
     build: () {
       when(authRepository.signIn(password)).thenAnswer((_) async => false);
       return AuthCubit(
-        notesRepository: notesRepository,
+        notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
       );
     },
@@ -91,7 +91,7 @@ void main() {
     build: () {
       when(authRepository.signUp(password)).thenAnswer((_) => Future.value());
       return AuthCubit(
-        notesRepository: notesRepository,
+        notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
       );
     },
@@ -108,7 +108,7 @@ void main() {
       when(notesRepository.deleteAll()).thenAnswer((_) => Future.value());
       when(authRepository.signOut()).thenAnswer((_) => Future.value());
       return AuthCubit(
-        notesRepository: notesRepository,
+        notesRepositoryProvider: () => Future.value(notesRepository),
         authRepository: authRepository,
       );
     },

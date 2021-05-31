@@ -22,11 +22,11 @@ class AuthState with _$AuthState {
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit({
     required this.authRepository,
-    required this.notesRepository,
+    required this.notesRepositoryProvider,
   }) : super(AuthState.loading());
 
   final AuthRepository authRepository;
-  final NotesRepository notesRepository;
+  final Future<NotesRepository> Function() notesRepositoryProvider;
 
   Future<void> init() async {
     emit(AuthState.loading());
@@ -49,7 +49,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> signOut() async {
     await authRepository.signOut();
-    await notesRepository.deleteAll();
+    await notesRepositoryProvider().then((repository) => repository.deleteAll());
     emit(AuthState.signUp(succeed: false));
   }
 }
