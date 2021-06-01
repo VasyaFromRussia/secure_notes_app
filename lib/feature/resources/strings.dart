@@ -4,7 +4,7 @@ abstract class AppStrings {
   static const greeting = 'Привет, это Secure Notes!';
   static const signUpDescription = 'Придумайте надёжный пароль, чтобы защитить свои заметки';
   static const signInDescription = 'Введите пароль, чтобы получить доступ к заметкам';
-  static const forgotPassword = 'Забыл пароль';
+  static const forgotPassword = 'Не помню пароль';
   static const passwordHint = 'Пароль';
 
   static const editorDefaultTitle = 'Без названия';
